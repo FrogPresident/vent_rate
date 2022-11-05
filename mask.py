@@ -43,6 +43,9 @@ def main():
         img = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
         all_vent = convertPolygonToMask(file_path)
         all_contour_list = get_all_contour_in_label(txt_path)
+        with open(out / f"{txt_path.stem}_contour_format.txt", 'w') as fp:
+            for line in all_contour_list:
+                fp.write(f"{line}\n")
         for contour in all_contour_list:
             shrimp_mask = np.zeros_like(img)
             cv2.drawContours(shrimp_mask, [contour], -1, 255, -1)
@@ -66,10 +69,10 @@ def main():
 
         data.append({"filename": str(file_path), "results": results})
 
-    if not args.visualize:
-        out.parent.mkdir(parents=True, exist_ok=True)
-        with out.open("w") as fp:
-            json.dump(data, fp)
+    # if not args.visualize:
+    #     out.parent.mkdir(parents=True, exist_ok=True)
+    #     with out.open("w") as fp:
+    #         json.dump(data, fp)
 
     cv2.destroyAllWindows()
 
